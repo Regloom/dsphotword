@@ -18,11 +18,12 @@ android_app {
     ],
 
     // SoundTrigger, IVoiceInteractionManagerService and other hidden APIs, plus
-    // signature|privileged permissions.
+    // signature|privileged permissions. Hidden APIs need system_ext: on /product Soong
+    // requires an sdk_version (PRODUCT_ENFORCE_PRODUCT_PARTITION_INTERFACE).
     platform_apis: true,
     certificate: "platform",
     privileged: true,
-    product_specific: true,
+    system_ext_specific: true,
 
     static_libs: [
         "dsphotword-sherpa-onnx",
@@ -62,19 +63,19 @@ cc_prebuilt_library_shared {
         none: true,
     },
     check_elf_files: false,
-    product_specific: true,
+    system_ext_specific: true,
 }
 
 prebuilt_etc {
     name: "privapp-permissions-dsphotword.xml",
     src: "privapp-permissions-dsphotword.xml",
     sub_dir: "permissions",
-    product_specific: true,
+    system_ext_specific: true,
 }
 
 prebuilt_etc {
     name: "default-permissions-dsphotword.xml",
     src: "default-permissions-dsphotword.xml",
     sub_dir: "default-permissions",
-    product_specific: true,
+    system_ext_specific: true,
 }
