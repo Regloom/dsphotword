@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DSP Hotword Trigger</string>
+    <string name="settings_title">“OK Google” voice activation</string>
+    <string name="settings_summary">Start the assistant with “OK Google” detected on the DSP</string>
+    <string name="settings_summary_off">Off</string>
+    <string name="settings_summary_on">On</string>
+    <string name="settings_summary_on_voice">On, owner\'s voice only</string>
+    <string name="tile_label">OK Google</string>
+
+    <string name="pref_enabled">Listen for “OK Google” on the DSP</string>
+    <string name="pref_beep">Beep after the phrase</string>
+    <string name="voice_match_header">Owner\'s voice</string>
+    <string name="voice_match_hint">Start the assistant only for your voice. The check takes about 0.3 s (about 1 s the first time after a restart).</string>
+    <string name="pref_voice_match">Check the voice</string>
+    <string name="voice_record">Record voice sample</string>
+    <string name="voice_rerecord">Re-record voice sample</string>
+    <string name="voice_delete">Delete voice sample</string>
+    <string name="voice_enroll_prompt">Say “OK Google” %1$d times. Recorded: %2$d/%1$d</string>
+    <string name="voice_enroll_progress">Say “OK Google”. Recorded: %1$d/%2$d</string>
+    <string name="voice_enroll_done">Voice sample recorded.</string>
+    <string name="voice_enroll_failed">Failed: not enough clear samples. Try again.</string>
+    <string name="strictness_header">Voice check strictness</string>
+    <string name="confidence_header">DSP sensitivity</string>
+</resources>

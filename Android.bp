@@ -1,0 +1,80 @@
+// Copyright (C) 2026 Regloom
+// SPDX-License-Identifier: Apache-2.0
+
+// DSP Hotword Trigger: listens for the vendor "OK Google" keyphrase on the Qualcomm Hexagon DSP
+// and starts whichever app holds the ASSISTANT role. It is not an assistant itself.
+// Add "DspHotwordTrigger" to PRODUCT_PACKAGES to include it in a ROM.
+
+android_app {
+    name: "DspHotwordTrigger",
+
+    srcs: ["src/**/*.java"],
+    resource_dirs: ["res"],
+    asset_dirs: ["assets"],
+    // the 27 MB speaker model is read without inflating it
+    aaptflags: [
+        "-0",
+        "onnx",
+    ],
+
+    // SoundTrigger, IVoiceInteractionManagerService and other hidden APIs, plus
+    // signature|privileged permissions.
+    platform_apis: true,
+    certificate: "platform",
+    privileged: true,
+    product_specific: true,
+
+    static_libs: [
+        "dsphotword-sherpa-onnx",
+        // the Kotlin API classes of sherpa-onnx need the Kotlin standard library
+        "kotlin-stdlib",
+    ],
+    jni_libs: ["libsherpa-onnx-jni"],
+
+    optimize: {
+        enabled: false,
+    },
+
+    required: [
+        "privapp-permissions-dsphotword.xml",
+        "default-permissions-dsphotword.xml",
+    ],
+}
+
+// sherpa-onnx 2.0.2 (Apache-2.0), Kotlin API classes from the Android AAR, see prebuilts/README.md
+java_import {
+    name: "dsphotword-sherpa-onnx",
+    jars: ["prebuilts/sherpa-onnx/sherpa-onnx-classes.jar"],
+    sdk_version: "current",
+}
+
+// sherpa-onnx JNI library with onnxruntime statically linked (arm64 only)
+cc_prebuilt_library_shared {
+    name: "libsherpa-onnx-jni",
+    compile_multilib: "64",
+    arch: {
+        arm64: {
+            srcs: ["prebuilts/sherpa-onnx/arm64-v8a/libsherpa-onnx-jni.so"],
+        },
+    },
+    sdk_version: "current",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    product_specific: true,
+}
+
+prebuilt_etc {
+    name: "privapp-permissions-dsphotword.xml",
+    src: "privapp-permissions-dsphotword.xml",
+    sub_dir: "permissions",
+    product_specific: true,
+}
+
+prebuilt_etc {
+    name: "default-permissions-dsphotword.xml",
+    src: "default-permissions-dsphotword.xml",
+    sub_dir: "default-permissions",
+    product_specific: true,
+}

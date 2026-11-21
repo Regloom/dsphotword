@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Голосовая активация «OK Google»</string>
+    <string name="settings_summary">Запуск ассистента по фразе «OK Google» на DSP</string>
+    <string name="settings_summary_off">Выключено</string>
+    <string name="settings_summary_on">Включено</string>
+    <string name="settings_summary_on_voice">Включено, только голос владельца</string>
+
+    <string name="pref_enabled">Слушать «OK Google» на DSP</string>
+    <string name="pref_beep">Сигнал после фразы</string>
+    <string name="voice_match_header">Голос владельца</string>
+    <string name="voice_match_hint">Запускать ассистента только по вашему голосу. Проверка занимает около 0,3 с (около 1 с в первый раз после перезапуска).</string>
+    <string name="pref_voice_match">Проверять голос</string>
+    <string name="voice_record">Записать образец голоса</string>
+    <string name="voice_rerecord">Перезаписать образец голоса</string>
+    <string name="voice_delete">Удалить образец голоса</string>
+    <string name="voice_enroll_prompt">Скажите «OK Google» %1$d раз. Записано: %2$d/%1$d</string>
+    <string name="voice_enroll_progress">Скажите «OK Google». Записано: %1$d/%2$d</string>
+    <string name="voice_enroll_done">Образец голоса записан.</string>
+    <string name="voice_enroll_failed">Не удалось: мало чётких записей. Попробуйте снова.</string>
+    <string name="strictness_header">Строгость проверки голоса</string>
+    <string name="confidence_header">Чувствительность DSP</string>
+</resources>

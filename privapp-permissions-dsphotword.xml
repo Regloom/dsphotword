@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<permissions>
+    <!-- Every privileged permission requested in AndroidManifest.xml must be listed here
+         (ro.control_privapp_permissions=enforce). Signature-only permissions
+         (ACCESS_VOICE_INTERACTION_SERVICE, MANAGE_ROLE_HOLDERS) come from the platform key. -->
+    <privapp-permissions package="io.github.regloom.dsphotword">
+        <permission name="android.permission.CAPTURE_AUDIO_HOTWORD"/>
+        <permission name="android.permission.KEYPHRASE_ENROLLMENT_APPLICATION"/>
+        <permission name="android.permission.MANAGE_SOUND_TRIGGER"/>
+        <permission name="android.permission.MANAGE_VOICE_KEYPHRASES"/>
+        <permission name="android.permission.SOUND_TRIGGER_RUN_IN_BATTERY_SAVER"/>
+        <permission name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"/>
+    </privapp-permissions>
+</permissions>

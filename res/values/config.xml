@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BCP 47 locale of the vendor "OK Google" keyphrase model to use, e.g. "ru-RU". Empty means
+         the system locale (with en-US as fallback). A device tree can set it with an overlay. -->
+    <string name="config_hotwordLocale" translatable="false"></string>
+</resources>

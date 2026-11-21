@@ -1,0 +1,4 @@
+build/
+ksu-module/system/
+ksu-module/.apk.sha1
+*.zip
