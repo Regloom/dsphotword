@@ -1,6 +1,6 @@
 id=dsp_hotword_trigger
 name=DSP Hotword Trigger
-version=v1.9
-versionCode=13
+version=v1.9.1
+versionCode=14
 author=Regloom
 description=Listens for "OK Google" on the Qualcomm Hexagon DSP and starts the default digital assistant app (e.g. Dicio). Optional local voice match.
