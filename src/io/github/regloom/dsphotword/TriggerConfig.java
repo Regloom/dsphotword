@@ -20,9 +20,12 @@ final class TriggerConfig {
         java.util.LinkedHashSet<String> locales = new java.util.LinkedHashSet<>();
         String configured = context.getString(R.string.config_hotwordLocale).trim();
         if (!configured.isEmpty()) {
-            locales.add(java.util.Locale.forLanguageTag(configured).toLanguageTag());
+            locales.add(java.util.Locale.forLanguageTag(configured).stripExtensions().toLanguageTag());
         }
-        locales.add(android.os.LocaleList.getDefault().get(0).toLanguageTag());
+        // The system locale carries user preferences as Unicode extensions
+        // (en-US-u-fw-mon-mu-celsius); the keyphrase database and the enrollment app only know
+        // language-region tags.
+        locales.add(android.os.LocaleList.getDefault().get(0).stripExtensions().toLanguageTag());
         locales.add(FALLBACK_LOCALE);
         return new java.util.ArrayList<>(locales);
     }
