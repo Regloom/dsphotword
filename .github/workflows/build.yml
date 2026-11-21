@@ -1,0 +1,103 @@
+name: Build APK and KernelSU module
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      # only used to create the release on a v* tag
+      contents: write
+    env:
+      COMPILE_SDK: "36"
+      BUILD_TOOLS: "36.0.0"
+      # AOSP test platform key (build/make/target/product/security), public, used by ROMs
+      # signed with test keys. Set the PLATFORM_PK8_BASE64 and PLATFORM_X509_BASE64 secrets
+      # to sign with your own ROM's platform key instead.
+      AOSP_KEY_URL: https://android.googlesource.com/platform/build/+/refs/heads/main/target/product/security
+      AOSP_PK8_SHA256: 1ad8ef556870edb70f69a9d3c112544c07de5162ba440d84d33f8bb0c5962875
+      AOSP_X509_SHA256: 9837de028f460c35cc8d3fa45f14eecce30f6fbfe4b93d399aef1acb80c20d14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check prebuilt checksums
+        run: sha256sum -c SHA256SUMS
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install Android SDK packages
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKMANAGER" --licenses > /dev/null || true
+          "$SDKMANAGER" --install "platforms;android-$COMPILE_SDK" "build-tools;$BUILD_TOOLS" > /dev/null
+          # build-apk.sh takes the newest build-tools; keep only the pinned one
+          find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 ! -name "$BUILD_TOOLS" \
+              -exec rm -rf {} +
+
+      - name: Platform key
+        env:
+          PK8_B64: ${{ secrets.PLATFORM_PK8_BASE64 }}
+          X509_B64: ${{ secrets.PLATFORM_X509_BASE64 }}
+        run: |
+          KEY_DIR="$RUNNER_TEMP/key"
+          mkdir -p "$KEY_DIR"
+          if [ -n "$PK8_B64" ] && [ -n "$X509_B64" ]; then
+              echo "Signing with the platform key from the repository secrets"
+              echo "$PK8_B64" | base64 -d > "$KEY_DIR/platform.pk8"
+              echo "$X509_B64" | base64 -d > "$KEY_DIR/platform.x509.pem"
+          else
+              echo "Signing with the AOSP test platform key"
+              curl -fsSL "$AOSP_KEY_URL/platform.pk8?format=TEXT" | base64 -d > "$KEY_DIR/platform.pk8"
+              curl -fsSL "$AOSP_KEY_URL/platform.x509.pem?format=TEXT" | base64 -d > "$KEY_DIR/platform.x509.pem"
+              echo "$AOSP_PK8_SHA256  $KEY_DIR/platform.pk8" | sha256sum -c -
+              echo "$AOSP_X509_SHA256  $KEY_DIR/platform.x509.pem" | sha256sum -c -
+          fi
+          echo "PLATFORM_KEY=$KEY_DIR/platform" >> "$GITHUB_ENV"
+
+      - name: Build APK
+        run: FORCE_SDK_MODE=1 ./build-apk.sh
+
+      - name: Build KernelSU module
+        run: ./build-ksu-module.sh
+
+      - name: Remove the key
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/key"
+
+      - name: Version
+        id: version
+        run: echo "version=$(sed -n 's/^version=//p' ksu-module/module.prop)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DspHotwordTrigger-${{ steps.version.outputs.version }}-${{ github.sha }}
+          path: |
+            build/DspHotwordTrigger.apk
+            build/DspHotwordTrigger-KSU-*.zip
+          if-no-files-found: error
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if [ "$TAG" != "$VERSION" ]; then
+              echo "::error::tag $TAG does not match module.prop version $VERSION"
+              exit 1
+          fi
+          (cd build && sha256sum DspHotwordTrigger.apk DspHotwordTrigger-KSU-*.zip > SHA256SUMS)
+          gh release create "$TAG" build/DspHotwordTrigger-KSU-*.zip build/DspHotwordTrigger.apk \
+              build/SHA256SUMS --title "DSP Hotword Trigger $TAG" --generate-notes

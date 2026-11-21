@@ -1,0 +1,5 @@
+44b37e25ca29e3f0c22fe855f8037b17192f22f2a8ce91358215f87c87353bfc  prebuilts/sherpa-onnx/sherpa-onnx-classes.jar
+f99de9819a32c67c4011989e3cb7f0bb4a04d11ee128095da3402307a149a6eb  prebuilts/sherpa-onnx/arm64-v8a/libsherpa-onnx-jni.so
+8836ccffd3585fadda9901244b20d42901d2f3cd581058d8434e2ffabcf3a3e7  prebuilts/kotlin/kotlin-stdlib.jar
+dc83dd78e9ede9bc836778d08eac8cb42c28bc9c1730fb10c0bdfe3996b1bc21  prebuilts/framework-stubs/hidden-api-stubs.jar
+53cab20ba8f2eb2f6e2d89ecc18e88ef3222169b61b4419cbc13666744a4574b  assets/speaker.onnx

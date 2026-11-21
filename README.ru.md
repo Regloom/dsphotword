@@ -61,12 +61,24 @@ DSP Hotword Trigger загружает модель производителя �
 
 ### Модулем KernelSU (root, прошивка с известным платформенным ключом)
 
+Готовые сборки: [Releases](https://github.com/Regloom/dsphotword/releases) или артефакты
+[workflow сборки](https://github.com/Regloom/dsphotword/actions). **Они подписаны открытым тестовым платформенным ключом
+AOSP**, поэтому работают только на прошивках, подписанных тестовыми ключами (большинство самосборных и многие
+неофициальные). Для другой прошивки соберите сами с её платформенным ключом:
+
 ```sh
-LINEAGE_TREE=/путь/к/собранному/дереву ./build-apk.sh   # или PLATFORM_KEY=/путь/к/platform (pk8/x509.pem)
+# с собранным деревом AOSP/LineageOS (его инструменты сборки, framework.jar и платформенный ключ)
+LINEAGE_TREE=/путь/к/собранному/дереву ./build-apk.sh
+# или с Android SDK (build-tools, platforms;android-36) и JDK 17+
+ANDROID_HOME=/путь/к/sdk PLATFORM_KEY=/путь/к/platform ./build-apk.sh   # platform.pk8 + platform.x509.pem
 ./build-ksu-module.sh
 adb push build/DspHotwordTrigger-KSU-*.zip /data/local/tmp/
 adb shell su -c 'ksud module install /data/local/tmp/DspHotwordTrigger-KSU-*.zip'
 ```
+
+Чтобы сборки GitHub в форке подписывались своим ключом, задайте секреты репозитория `PLATFORM_PK8_BASE64` и
+`PLATFORM_X509_BASE64` (`base64 -w0 platform.pk8`). Тег `v*`, совпадающий с `version` в `ksu-module/module.prop`,
+публикует релиз.
 
 Затем в профиле приложения «DSP Hotword Trigger» в KernelSU **выключите «Отмонтировать модули»**, иначе приложение
 не видит свой APK и падает. Перезагрузите телефон. Приложение постоянное (persistent), поэтому обновления тоже

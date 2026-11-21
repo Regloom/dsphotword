@@ -60,12 +60,24 @@ does not take the assistant role.
 
 ### As a KernelSU module (root, ROM with known platform key)
 
+Ready-made builds: [Releases](https://github.com/Regloom/dsphotword/releases), or the artifacts of the
+[build workflow](https://github.com/Regloom/dsphotword/actions). **They are signed with the public AOSP test platform
+key**, so they only work on ROMs signed with test keys (most self-built and many unofficial ROMs). For any other ROM,
+build them yourself with its platform key:
+
 ```sh
-LINEAGE_TREE=/path/to/built/tree ./build-apk.sh   # or PLATFORM_KEY=/path/to/platform (pk8/x509.pem)
+# with a built AOSP/LineageOS tree (its build tools, framework.jar and platform key)
+LINEAGE_TREE=/path/to/built/tree ./build-apk.sh
+# or with the Android SDK (build-tools, platforms;android-36) and JDK 17+
+ANDROID_HOME=/path/to/sdk PLATFORM_KEY=/path/to/platform ./build-apk.sh   # platform.pk8 + platform.x509.pem
 ./build-ksu-module.sh
 adb push build/DspHotwordTrigger-KSU-*.zip /data/local/tmp/
 adb shell su -c 'ksud module install /data/local/tmp/DspHotwordTrigger-KSU-*.zip'
 ```
+
+To sign the GitHub builds of a fork with your own key, set the repository secrets `PLATFORM_PK8_BASE64` and
+`PLATFORM_X509_BASE64` (`base64 -w0 platform.pk8`). A `v*` tag equal to `version` in `ksu-module/module.prop` publishes a
+release.
 
 Then, in the KernelSU app profile of "DSP Hotword Trigger", **turn off "Umount modules"**: otherwise the app can't see
 its own APK and crashes. Reboot. The app is persistent, so updates also need a reboot.

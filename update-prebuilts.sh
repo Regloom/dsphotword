@@ -35,7 +35,9 @@ cp "$TMP/aar/classes.jar" prebuilts/sherpa-onnx/sherpa-onnx-classes.jar
 cp "$TMP/aar/jni/arm64-v8a/libsherpa-onnx-jni.so" prebuilts/sherpa-onnx/arm64-v8a/
 fetch "$MODEL_URL" assets/speaker.onnx "$MODEL_SHA256"
 fetch "$KOTLIN_URL" prebuilts/kotlin/kotlin-stdlib.jar "$KOTLIN_SHA256"
+# CI checks these
 sha256sum prebuilts/sherpa-onnx/sherpa-onnx-classes.jar \
     prebuilts/sherpa-onnx/arm64-v8a/libsherpa-onnx-jni.so prebuilts/kotlin/kotlin-stdlib.jar \
-    assets/speaker.onnx
+    prebuilts/framework-stubs/hidden-api-stubs.jar assets/speaker.onnx > SHA256SUMS
+cat SHA256SUMS
 echo "[+] prebuilts updated"
