@@ -22,4 +22,9 @@
     <string name="voice_enroll_failed">Failed: not enough clear samples. Try again.</string>
     <string name="strictness_header">Voice check strictness</string>
     <string name="confidence_header">DSP sensitivity</string>
+    <string name="dsp_model_header">DSP model</string>
+    <string name="dsp_model_hint">The phrase is “OK Google” in both. The English model is tuned for English pronunciation, the universal one for other languages. If it often misses the phrase or wakes up by itself, try the other one.</string>
+    <string name="dsp_model_auto">Automatic (system language)</string>
+    <string name="dsp_model_english">English</string>
+    <string name="dsp_model_universal">Universal</string>
 </resources>

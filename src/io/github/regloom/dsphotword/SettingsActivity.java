@@ -7,6 +7,8 @@ import android.os.Looper;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -105,6 +107,32 @@ public class SettingsActivity extends Activity {
         confidence.setOnSeekBarChangeListener(new SimpleSeek(
                 p -> TriggerPrefs.setConfidence(this, p)));
         root.addView(confidence);
+
+        addHeader(root, pad, getString(R.string.dsp_model_header));
+        TextView modelHint = new TextView(this);
+        modelHint.setText(R.string.dsp_model_hint);
+        root.addView(modelHint);
+        String[] models = {TriggerPrefs.DSP_MODEL_AUTO, TriggerPrefs.DSP_MODEL_ENGLISH,
+                TriggerPrefs.DSP_MODEL_UNIVERSAL};
+        int[] labels = {R.string.dsp_model_auto, R.string.dsp_model_english,
+                R.string.dsp_model_universal};
+        RadioGroup modelGroup = new RadioGroup(this);
+        String current = TriggerPrefs.getDspModel(this);
+        for (int i = 0; i < models.length; i++) {
+            RadioButton button = new RadioButton(this);
+            button.setId(i + 1);
+            button.setText(labels[i]);
+            button.setChecked(models[i].equals(current));
+            modelGroup.addView(button);
+        }
+        modelGroup.setOnCheckedChangeListener((group, id) -> {
+            TriggerPrefs.setDspModel(this, models[id - 1]);
+            // load the other copy of the model on the DSP now
+            if (TriggerPrefs.isEnabled(this)) {
+                DspListener.get(this).restart();
+            }
+        });
+        root.addView(modelGroup);
 
         ScrollView scroll = new ScrollView(this);
         scroll.addView(root);

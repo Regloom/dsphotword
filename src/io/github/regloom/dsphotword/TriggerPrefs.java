@@ -11,6 +11,12 @@ final class TriggerPrefs {
     private static final String KEY_VOICE_MATCH = "voice_match";
     private static final String KEY_STRICTNESS = "strictness";
     private static final String KEY_CONFIDENCE = "confidence";
+    private static final String KEY_DSP_MODEL = "dsp_model";
+
+    /** Which copy of the vendor keyphrase model to use, see TriggerConfig#localeCandidates. */
+    static final String DSP_MODEL_AUTO = "auto";
+    static final String DSP_MODEL_ENGLISH = "english";
+    static final String DSP_MODEL_UNIVERSAL = "universal";
 
     private TriggerPrefs() {}
 
@@ -59,5 +65,13 @@ final class TriggerPrefs {
 
     static void setConfidence(Context c, int v) {
         prefs(c).edit().putInt(KEY_CONFIDENCE, v).apply();
+    }
+
+    static String getDspModel(Context c) {
+        return prefs(c).getString(KEY_DSP_MODEL, DSP_MODEL_AUTO);
+    }
+
+    static void setDspModel(Context c, String v) {
+        prefs(c).edit().putString(KEY_DSP_MODEL, v).apply();
     }
 }

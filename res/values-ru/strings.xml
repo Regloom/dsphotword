@@ -20,4 +20,9 @@
     <string name="voice_enroll_failed">Не удалось: мало чётких записей. Попробуйте снова.</string>
     <string name="strictness_header">Строгость проверки голоса</string>
     <string name="confidence_header">Чувствительность DSP</string>
+    <string name="dsp_model_header">Модель DSP</string>
+    <string name="dsp_model_hint">Фраза в обеих одна — «OK Google». Английская модель настроена на английское произношение, универсальная — на другие языки. Если фраза часто не узнаётся или ассистент запускается сам, попробуйте другую.</string>
+    <string name="dsp_model_auto">Автоматически (язык системы)</string>
+    <string name="dsp_model_english">Английская</string>
+    <string name="dsp_model_universal">Универсальная</string>
 </resources>
